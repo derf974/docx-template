@@ -35,7 +35,7 @@ parse_variable()
 {
 	echo "${lst_var[@]}"
 	for var in "${lst_var[@]}"; do
-		echo "s#{{${var%%=*}}}#${var#*=}#g" >> ${F_SED}
+		echo "s#{{${var%%=*}}}#${var#*=}#g" >> "${F_SED}"
 	done
 }
 
@@ -50,12 +50,12 @@ change_var()
 	local f_output="$2"
 
 	#mkdir ${TMP_DIR} && \
-	unzip -d ${TMP_DIR} "${f_input}" > /dev/null && \
-	cd ${TMP_DIR} && \
-	find ${TMP_DIR} -iname "*.xml" | xargs sed -i '' -f "${F_SED}" && \
+	unzip -d "${TMP_DIR}" "${f_input}" > /dev/null && \
+	cd "${TMP_DIR}" && \
+	find "${TMP_DIR}" -iname "*.xml" | xargs sed -i '' -f "${F_SED}" && \
 	zip -T -r tmp.$$.docx * > /dev/null && \
 	cd - && \
-	cp ${TMP_DIR}/tmp.$$.docx "${f_output}" 
+	cp "${TMP_DIR}"/tmp.$$.docx "${f_output}" 
 	return $?
 }
 
@@ -66,7 +66,6 @@ for args ; do
 		-h)usage;;
 		-d)shift;set -x ;;
 		-v)shift;lst_var=( "${lst_var[@]}" "$1" );shift;;
-        -f)fdico=$1;shift 2;;
 		-i)shift;input_file=$1;shift;;
 		-o)shift;output_file=$1;shift;;
 	esac
