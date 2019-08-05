@@ -52,8 +52,8 @@ change_var()
 	#mkdir ${TMP_DIR} && \
 	unzip -d "${TMP_DIR}" "${f_input}" > /dev/null && \
 	cd "${TMP_DIR}" && \
-	find "${TMP_DIR}" -iname "*.xml" | xargs sed -i '' -f "${F_SED}" && \
-	zip -T -r tmp.$$.docx * > /dev/null && \
+	find "${TMP_DIR}" -iname "*.xml" -print0 | xargs -0 sed -i '' -f "${F_SED}" && \
+	zip -T -r tmp.$$.docx ./* > /dev/null && \
 	cd - && \
 	cp "${TMP_DIR}"/tmp.$$.docx "${f_output}" 
 	return $?
