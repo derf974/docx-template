@@ -49,12 +49,13 @@ change_var()
 	local f_input="$1"
 	local f_output="$2"
 
-	#mkdir ${TMP_DIR} && \
-	unzip -d "${TMP_DIR}" "${f_input}" > /dev/null && \
-	cd "${TMP_DIR}" && \
-	find "${TMP_DIR}" -iname "*.xml" -print0 | xargs -0 sed -i '' -f "${F_SED}" && \
-	zip -T -r tmp.$$.docx ./* > /dev/null && \
-	cd - && \
+	unzip -d "${TMP_DIR}/docx" "${f_input}" > /dev/null
+	cd "${TMP_DIR}/docx" || return 1
+	find "${TMP_DIR}/docx" -iname "*.xml"  | while read -r fic; do
+        sed -i '' -f "${F_SED}" "$fic"
+    done 
+	zip -T -r ../tmp.$$.docx ./* > /dev/null 
+	cd - || return 1
 	cp "${TMP_DIR}"/tmp.$$.docx "${f_output}" 
 	return $?
 }
@@ -97,5 +98,5 @@ echo "-> Change les valeurs dans le fichier"
 change_var "${input_file}" "${output_file}" || { echo "[E] : Sortie en erreur" ; exit 1 ;}
 
 echo "-> Suppression des fichiers temporaires"
-x#del_tmp
+del_tmp
 
